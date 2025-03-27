@@ -1,3 +1,5 @@
+#  Ollama LLM and Embeddings
+
 from operator import itemgetter
 from langchain_ollama import OllamaLLM
 from langchain_community.embeddings import OllamaEmbeddings
@@ -6,6 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.prompts import PromptTemplate
 from langchain_community.vectorstores import DocArrayInMemorySearch
+
 
 # For OpenAI usage
 import os
@@ -40,7 +43,7 @@ else:
 parser = StrOutputParser()
 
 # PDF Loader single document
-#loader = PyPDFLoader("agb-fuer-den-erwerb-und-die-nutzung-des-generalabonnements.pdf")
+#loader = PyPDFLoader("")
 #pages = loader.load_and_split()
 
 # PDF Loader Directory
@@ -63,30 +66,38 @@ if not documents:
 
 print(f"{len(documents)} pages loaded from {len(pdf_files)} PDFs.")
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100, separators=["\n\n", "\n", ". ", "? ", "! "])
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=800,
+                                               chunk_overlap=0.3,
+                                               separators=["\n\n", "\n", ". ", "? ", "! "]
+)
+
 pages = text_splitter.split_documents(documents)
 
 print(f"{len(pages)} text chunks created.")
 
 # Prompt Template
 template = """ \
-"You are an AI assistant specialized in analyzing terms and conditions. Your task is to extract precise and concise legal information.
+You are an AI assistant that analyzes legal terms and conditions.
 
 - Only use the provided context to answer the question.
-- If the context does not contain enough information, respond with: "I don't know."
-- Provide a structured answer with numbered points if applicable.
+- If the context does not contain the answer, respond with: "I don't know."
+- When appropriate, structure the answer into numbered bullet points.
 
-If you can't answer the question, reply "I don't know"." \
-"" \
-"Context: {context}" \
-"" \
-"Question: {question}" \
+Context:
+{context}
+
+Question:
+{question}
 """
+
 prompt = PromptTemplate.from_template(template)
 
 # Vector Store
 vectorstore = DocArrayInMemorySearch.from_documents(pages, embedding=embeddings)
-retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={
+    "k": 4,
+    "score_threshold": 0.3
+})
 
 # Chain
 chain = (
@@ -100,7 +111,7 @@ chain = (
 )
 
 # Invoke
-print(chain.invoke({"question": "In welchem Fall erhalte ich einen Übergans-SwissPass?"}), end="", flush=True)
+print(chain.invoke({"question": "Kann man mit dem SBB GA zum Mond fahren?"}), end="", flush=True)
 
 
 # Evaluation
