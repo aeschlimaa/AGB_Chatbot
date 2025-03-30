@@ -9,21 +9,15 @@ from ragas.metrics import (
 )
 
 questions = [
-    "Wie werden Münzen oder andere Wertsachen bei BEKB verwahrt?"
-]
+    ragas_data["question"].tolist()
+][0]
 
-ground_truths = [[
-    "Bei der BEKB werden Münzen oder andere Wertsachen in einem verschlossenen Depot verwahrt."
-]]
+ground_truths = [
+    ragas_data["reference_answer"].tolist()
+][0]
 
-answers = []
-contexts = []
-
-
-for query in questions:
-  docs = retriever.get_relevant_documents(query)
-  answers.append(chain.invoke({"question":query}))
-  contexts.append([docs.page_content for docs in retriever.get_relevant_documents(query)])
+answers = answers
+contexts = contexts
 
 # Example data
 data = {
@@ -33,8 +27,10 @@ data = {
     "reference": ground_truths
 }
 
+
 # Convert the data to a Hugging Face Dataset
 dataset = Dataset.from_dict(data)
+
 
 # Define the metrics you want to evaluate
 metrics = [
@@ -48,7 +44,7 @@ metrics = [
 # Evaluate the dataset using the selected metrics
 results = evaluate(dataset, metrics)
 
+
 # Display the results
-for metric_name, score in results.items():
-    print(f"{metric_name}: {score:.2f}")
+results
 

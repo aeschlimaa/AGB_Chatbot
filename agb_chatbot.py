@@ -110,6 +110,7 @@ chain = (
     | parser
 )
 
+
 # Invoke
 print(chain.invoke({"question": "Kann man mit dem SBB GA zum Mond fahren?"}), end="", flush=True)
 
