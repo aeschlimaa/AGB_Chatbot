@@ -8,6 +8,7 @@ This project implements a Retrieval-Augmented Generation (RAG) chatbot designed 
 - **`evaluation_giskard.py`**: Evaluates the chatbot using the Giskard library and generates an HTML report (`test2.html`).
 - **`evaluations_ragas.py`**: Performs detailed evaluation using RAGAS metrics (e.g., faithfulness, relevancy, correctness).
 - **`evaluation_speed.py`**: Measures the speed of retrieval and answer generation.
+- **`app.py`**: Streamlit App allowing users to query documents through a simple UI.
 - **`B2B/`**: Directory containing PDF files with terms and conditions (AGBs) that form the knowledge base.
 
 ## Setup Instructions
