@@ -28,13 +28,13 @@ MODEL = "gpt-3.5-turbo"
 
 # conditional Model and embeddings selection
 if MODEL in ["mistral", "deepseek-r1:7b", "llama3.1:8b", "llama3.2", "tinyllama"]: #  Ollama LLM and Embeddings
-    model = OllamaLLM(temperature= 0.3, model=MODEL)
+    model = OllamaLLM(temperature= 0.2, model=MODEL)
     embeddings = OllamaEmbeddings(model=MODEL)
 elif MODEL.startswith("gpt-"):
     # Use OpenAI LLM and Embeddings
     if MODEL.startswith("gpt-") and not OPENAI_API_KEY:
         raise ValueError("OpenAI API Key is missing, check .env file.")
-    model = ChatOpenAI(temperature=0.3, model=MODEL, api_key=OPENAI_API_KEY)
+    model = ChatOpenAI(temperature=0.2, model=MODEL, api_key=OPENAI_API_KEY)
     embeddings = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
 else:
     raise ValueError(f"Model not supported in this script: {MODEL}")
@@ -58,15 +58,17 @@ documents = []
 for pdf_file in pdf_files:
     pdf_path = os.path.join(directory, pdf_file)
     loader = PyPDFLoader(pdf_path)
-    pages = loader.load_and_split()
-    documents.extend(pages)
+
+    # Nur rohe Seiten laden, nicht automatisch splitten
+    pdf_docs = loader.load()
+    documents.extend(pdf_docs)
 
 if not documents:
-    raise ValueError(f" No PDFs found in: {directory}")
+    raise ValueError(f"No PDFs found in: {directory}")
 
-print(f"{len(documents)} pages loaded from {len(pdf_files)} PDFs.")
+print(f"{len(documents)} raw pages loaded from {len(pdf_files)} PDFs.")
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=800,
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500,
                                                chunk_overlap=150,
                                                separators=["\n\n", "\n", ". ", "? ", "! "]
 )
@@ -95,8 +97,8 @@ prompt = PromptTemplate.from_template(template)
 # Vector Store
 vectorstore = DocArrayInMemorySearch.from_documents(pages, embedding=embeddings)
 retriever = vectorstore.as_retriever(search_kwargs={
-    "k": 4,
-    "score_threshold": 0.6
+    "k": 5,
+    "score_threshold": 0.15
 })
 
 # Chain
@@ -110,13 +112,13 @@ chain = (
     | parser
 )
 
+def get_rag_components():
+    return chain, retriever, pages, documents
+
 
 # Invoke
-print(chain.invoke({"question": "Kann man mit dem SBB GA zum Mond fahren?"}), end="", flush=True)
+print(chain.invoke({"question": "Can I cancel my contract with Sunrise Mobile before the end of the minimum contract period?"}), end="", flush=True)
 
-
-# Evaluation
-# import evaluation_giskard
 
 
 
