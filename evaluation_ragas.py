@@ -8,14 +8,9 @@ from ragas.metrics import (
     context_recall,
 )
 
-questions = [
-    ragas_data["question"].tolist()
-][0]
-
-ground_truths = [
-    ragas_data["reference_answer"].tolist()
-][0]
-
+# preparing the data 
+questions = [ragas_data["question"].tolist()][0]
+ground_truths = [ragas_data["reference_answer"].tolist()][0]
 answers = answers
 contexts = contexts
 
@@ -47,6 +42,8 @@ results = evaluate(dataset, metrics)
 
 # Display the results
 results
+
+# calculate the average for generation/retriever
 (sum(results["faithfulness"])/60 + sum(results['answer_relevancy'])/60)/2
 (sum(results['context_precision'])+sum(results['context_recall']))/120
 
