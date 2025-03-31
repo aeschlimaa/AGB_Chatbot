@@ -13,7 +13,7 @@ df = pd.DataFrame([d.page_content for d in pages], columns=["text"])
 df.head(10)
 
 knowledge_base = KnowledgeBase(df)
-#
+
 # creating the Test Set
 testset = generate_testset(
     knowledge_base,
@@ -21,10 +21,7 @@ testset = generate_testset(
     agent_description="A chatbot answering questions about terms and conditions",
    )
 
-
-
-
-# evaluating model on the test set
+# defining answer_fn, that retrieves documents (contexts) and answer the questions
 answers = []
 contexts = []
 def answer_fn(question, history=None):
@@ -34,9 +31,11 @@ def answer_fn(question, history=None):
     contexts.append([docs.page_content for docs in retriever.get_relevant_documents(question)])
     return answer
 
+# the actual evaluation
 report = evaluate(answer_fn, testset=testset, knowledge_base=knowledge_base)
 
+# store the report
 report.save("results_giskard")
 
-# prepare RAGAS: questions and ground_truths
+# preparation RAGAS: questions and ground_truths
 ragas_data = testset.to_pandas()
