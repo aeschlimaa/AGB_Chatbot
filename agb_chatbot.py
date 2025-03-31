@@ -67,7 +67,7 @@ if not documents:
 print(f"{len(documents)} pages loaded from {len(pdf_files)} PDFs.")
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=800,
-                                               chunk_overlap=0.3,
+                                               chunk_overlap=150,
                                                separators=["\n\n", "\n", ". ", "? ", "! "]
 )
 
@@ -96,7 +96,7 @@ prompt = PromptTemplate.from_template(template)
 vectorstore = DocArrayInMemorySearch.from_documents(pages, embedding=embeddings)
 retriever = vectorstore.as_retriever(search_kwargs={
     "k": 4,
-    "score_threshold": 0.3
+    "score_threshold": 0.6
 })
 
 # Chain

@@ -19,7 +19,7 @@ ground_truths = [
 answers = answers
 contexts = contexts
 
-# Example data
+# create dataset
 data = {
     "question": questions,
     "answer": answers,
@@ -47,4 +47,7 @@ results = evaluate(dataset, metrics)
 
 # Display the results
 results
+(sum(results["faithfulness"])/60 + sum(results['answer_relevancy'])/60)/2
+(sum(results['context_precision'])+sum(results['context_recall']))/120
+
 
