@@ -15,7 +15,7 @@ This project implements a Retrieval-Augmented Generation (RAG) chatbot designed 
 1. **Install Dependencies**:
 
    ```
-   pip install langchain langchain-community langchain-openai langchain-ollama giskard ragas datasets PyPDF2 python-dotenv docarray
+   pip install -r requirements.txt
    ```
 
    - Ensure you have Ollama installed locally if using Ollama models (mistral, llama3.1, etc.).
@@ -52,6 +52,13 @@ This project implements a Retrieval-Augmented Generation (RAG) chatbot designed 
       ```
       python evaluation_speed.py
       ```
+      
+5. **Use as Streamlit Web Interface (Streamlit App)**
+   
+      ```
+      streamlit run app.py
+      ```
+
 
 ## Usage Example
 
