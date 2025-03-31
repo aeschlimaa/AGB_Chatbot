@@ -44,13 +44,13 @@ This project implements a Retrieval-Augmented Generation (RAG) chatbot designed 
    - Run evaluations_ragas.py for RAGAS metrics (requires prior Giskard evaluation).
 
       ```
-      python evaluation_giskard.py
+      python evaluation_ragas.py
       ```
 
    - Run evaluation_speed.py to measure performance.
 
       ```
-      python evaluation_giskard.py
+      python evaluation_speed.py
       ```
 
 ## Usage Example
