@@ -60,6 +60,9 @@ This project implements a Retrieval-Augmented Generation (RAG) chatbot designed 
       streamlit run app.py
       ```
 
+      - Users can upload PDF files directly through the web interface.
+
+      - Ask questions based on the uploaded documents.
 
 ## Usage Example
 
