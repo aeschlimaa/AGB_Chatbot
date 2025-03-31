@@ -54,7 +54,7 @@ This project implements a Retrieval-Augmented Generation (RAG) chatbot designed 
       python evaluation_speed.py
       ```
       
-5. **Use as Streamlit Web Interface (Streamlit App)**
+5. **Alternatively: Use as Streamlit Web Interface (Streamlit App)**
    
       ```
       streamlit run app.py
